@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>KcalCall</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Ninth navbar example">
+        <div class="container-xl">
+          <a class="navbar-brand" href="{% url 'home'%}">KcalCall</a>
+          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL" aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="navbar-collapse collapse" id="navbarsExample07XL">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'calculator'%}">Calculator</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact'%}">Contact</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">Support</a>
+              </li>
+            </ul>
+            <a class="text-reset me-3" onclick="popup()" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                </svg>
+            </a>
+          </div>
+        </div>
+      </nav>
+      <main class="container py-4">
+        <div class="bg-light p-5 rounded mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <form method="POST">
+                        <div class="form-group row align-items-center">
+                            {% csrf_token %}
+                            <label for="food_consumed" class="col-12 col-md-4 col-form-label text-center text-md-left"><b>Select Food</b></label>
+                            <div class="col-12 col-md-6 mt-2 mt-md-0">
+                                <select class="form-control" name="food_consumed" id="food_consumed">
+                                    {% for food in foods %}
+                                    <option value="{{food.name}}">{{food.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-2 mt-3 mt-md-0">
+                                <button class="btn btn-success btn-block" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-light p-4 rounded mb-4">
+            <div class="row text-center">
+                <h3>Calorie Goal</h3>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-9 offset-md-1">
+                    <div class="progress">
+                        <div class="progress-bar bg-success" 
+                             role="progressbar" 
+                             style="width: 0%" 
+                             aria-valuenow="0" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100" 
+                             id="calorieProgressBar">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 text-center mt-2">
+                    <span id="calorieProgressText">0 / {{ calorie_goal }} Kcal</span>
+                </div>
+            </div>
+        </div>           
+        <div class="bg-light p-4 rounded">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="mb-4">
+                        <h4 class="text-center">Today's Consumption</h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="table" class="table table-striped table-bordered shadow-sm">
+                            <thead class="text-black">
+                                <tr>
+                                    <th class="text-center">Food Item</th>
+                                    <th class="text-center">Carbs (gm)</th>
+                                    <th class="text-center">Protein (gm)</th>
+                                    <th class="text-center">Fats (gm)</th>
+                                    <th class="text-center">Calories (Kcal)</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for food in consumed_food %}
+                                <tr>
+                                    <td class="text-center">{{ food.name }}</td>
+                                    <td class="text-center">{{ food.carbs }}</td>
+                                    <td class="text-center">{{ food.protein }}</td>
+                                    <td class="text-center">{{ food.fats }}</td>
+                                    <td class="text-center">{{ food.calories }}</td>
+                                    <td class="text-center">
+                                        <a class="btn btn-danger btn-sm shadow-sm"  onclick="deleteRow(this, '{{ food.name }}')">Remove</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="text-black">
+                                <tr>
+                                    <td class="text-center"><strong>Total</strong></td>
+                                    <td class="text-center" id="totalCarbs"><strong></strong></td>
+                                    <td class="text-center" id="totalProtien"><strong></strong></td>
+                                    <td class="text-center" id="totalFats"><strong></strong></td>
+                                    <td class="text-center" id="totalCalories"><strong></strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        {% if consumed_food %}
+            <div class="bg-light p-4 rounded mb-4">
+                <div class="row text-center">
+                    <h3>Today's Nutritional Breakdown</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <canvas id="nutritionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            
+        {% endif %}
+   
+    </main>
+    <div class="container" bis_skin_checked="1">
+        <footer class="py-3 my-4">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          </ul>
+          <p class="text-center text-body-secondary">© 2025 KcalCall, All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function popup(){
+            Swal.fire({
+                title: "Hy, we are KcalCall",
+                text: "Track your daily caloric intake effortlessly with our easy-to-use calorie calculator. Simply input your food details, and our tool will quickly provide the total kcal count, helping you stay on top of your nutrition goals. Perfect for anyone looking to maintain, lose, or gain weight!",
+                icon: "info",
+                confirmButtonColor:"#198754"
+              });
+        }
+        let nutritionChartInstance;
+        function renderNutritionChart() {
+            const totalCarbs = parseFloat(document.getElementById('totalCarbs').textContent || 0);
+            const totalProtein = parseFloat(document.getElementById('totalProtien').textContent || 0);
+            const totalFats = parseFloat(document.getElementById('totalFats').textContent || 0);
+
+            if (nutritionChartInstance) {
+                nutritionChartInstance.destroy();
+            }
+
+            const nutritionData = {
+                labels: ['Carbs', 'Protein', 'Fats'],
+                datasets: [{
+                    label: 'Nutritional Breakdown',
+                    data: [totalCarbs, totalProtein, totalFats], // Values to display in the chart
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Colors for each section of the chart
+                    hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                }]
+            };
+
+            const config = {
+                type: 'pie', // Pie chart
+                data: nutritionData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw.toFixed(2) + ' gm';
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const ctx = document.getElementById('nutritionChart').getContext('2d');
+            nutritionChartInstance = new Chart(ctx, config);
+        }
+        function deleteRow(button, foodName) {
+            const row = button.closest('tr');
+            row.remove();
+            updateTotals();
+            updateProgressBar();
+
+            fetch('/remove-food/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ food_name: foodName })
+            }).then(response => {
+                if (response.ok) {
+                    console.log(`${foodName} removed.`);
+                } else {
+                    console.error('Failed to remove food from the session.');
+                }
+            }).catch(error => console.error('Error:', error));
+            
+        }
+
+        function updateTotals() {
+            let totalCarbs = 0, totalProtein = 0, totalFats = 0, totalCalories = 0;
+
+            document.querySelectorAll('#table tbody tr').forEach(row => {
+                totalCarbs += parseFloat(row.cells[1].textContent || 0);
+                totalProtein += parseFloat(row.cells[2].textContent || 0);
+                totalFats += parseFloat(row.cells[3].textContent || 0);
+                totalCalories += parseFloat(row.cells[4].textContent || 0);
+            });
+
+            document.getElementById('totalCarbs').textContent = totalCarbs.toFixed(2);
+            document.getElementById('totalProtien').textContent = totalProtein.toFixed(2);
+            document.getElementById('totalFats').textContent = totalFats.toFixed(2);
+            document.getElementById('totalCalories').textContent = totalCalories.toFixed(2);
+
+            renderNutritionChart();
+        }
+
+        function updateProgressBar() {
+            const calorieGoal = "{{ calorie_goal }}";
+            let totalCalories = parseFloat(document.getElementById('totalCalories').textContent || 0);
+            const percentage = Math.min((totalCalories / calorieGoal) * 100, 100).toFixed(2);
+
+            const progressBar = document.getElementById('calorieProgressBar');
+            const progressText = document.getElementById('calorieProgressText');
+            
+            progressBar.style.width = `${percentage}%`;
+            progressBar.setAttribute('aria-valuenow', percentage);
+            progressText.textContent = `${totalCalories.toFixed(2)} / ${calorieGoal} Kcal`;
+
+            
+            if (percentage < 50) {
+                progressBar.classList.remove('bg-warning', 'bg-danger');
+                progressBar.classList.add('bg-success');
+            } else if (percentage < 90) {
+                progressBar.classList.remove('bg-success', 'bg-danger');
+                progressBar.classList.add('bg-warning');
+            } else {
+                progressBar.classList.remove('bg-success', 'bg-warning');
+                progressBar.classList.add('bg-danger');
+            }
+
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTotals();
+            updateProgressBar();
+            
+            
+        });
+        
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+        
+
+        
+    </script>
+
+</body>
+</html>

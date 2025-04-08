@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+      <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/contacts/contact-1/assets/css/contact-1.css">
+      <title>Calculator</title>
+   </head>
+   <body class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Ninth navbar example">
+         <div class="container-xl">
+            <a class="navbar-brand" href="{% url 'home'%}">KcalCall</a>
+            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL" aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarsExample07XL">
+               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                     <a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'calculator'%}">Calculator</a>
+                   </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'contact'%}">Contact</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link disabled" href="#">Support</a>
+                  </li>
+               </ul>
+               <a class="text-reset me-3" onclick="popup()" href="#">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                     <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                  </svg>
+               </a>
+            </div>
+         </div>
+      </nav>
+      <section class="bg-light py-3 py-md-5">
+        <div class="container">
+           <div class="row justify-content-md-center">
+              <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+                 <h2 class="mb-4 display-5 text-center">Kcal Calculator</h2>
+                 <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
+              </div>
+           </div>
+        </div>
+        <div class="container">
+           <div class="row justify-content-lg-center">
+              <div class="col-12 col-lg-9">
+                 <div class="bg-white border rounded shadow-sm overflow-hidden">
+
+                    <form method="post">
+                     {% csrf_token %}
+                       <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+                          <div class="col-12">
+                             <label for="gender" class="form-label">What is your sex?</label>
+                             <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+                                <label class="form-check-label" >
+                                  Male
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                <label class="form-check-label">
+                                  Female
+                                </label>
+                              </div>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <label for="age" class="form-label">How old are you?</label>
+                            <input type="text" class="form-control" id="age" name="age" required>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <label for="tall" class="form-label">How tall are you?</label>
+                            <input type="text" class="form-control" id="tall" name="tall" required>
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <label for="weigh" class="form-label">How much do you weigh?</label>
+                            <input type="text" class="form-control" id="weigh" name="weigh" required>
+                          </div>
+                          <div class="col_12 col-md-6">
+                            <label for="active" class="form-label">How active are you on daily basis?</label>
+                            <select class="form-select" name="active">
+                                <option value="1.2">Sedentary (office job)</option>
+                                <option value="1.375">Light Exercise (1-2 days/week)</option>
+                                <option value="1.55">Moderate Exercise (3-5 days/week)</option>
+                                <option value="1.725">Heavy Exercise (6-7 days/week)</option>
+                                <option value="1.9">Athlete (2x per day) </option>
+                              </select>
+                          </div>
+                          <div class="col-12 d-flex justify-content-center">
+                             <div class="d-grid">
+                                <button class="btn btn-success btn-lg" type="submit">Calculate</button>
+                             </div>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+              </div>
+           </div>
+        </div>
+       </section>
+
+
+
+
+      <div class="container bg-light" bis_skin_checked="1">
+        <footer class="py-3 my-4">
+          <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          </ul>
+          <p class="text-center text-body-secondary">© 2025 KcalCall, All rights reserved.</p>
+        </footer>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+         function popup(){
+             Swal.fire({
+                 title: "Hy, we are KcalCall",
+                 text: "Track your daily caloric intake effortlessly with our easy-to-use calorie calculator. Simply input your food details, and our tool will quickly provide the total kcal count, helping you stay on top of your nutrition goals. Perfect for anyone looking to maintain, lose, or gain weight!",
+                 icon: "info",
+                 confirmButtonColor:"#198754"
+               });
+         }
+      </script>
+   </body>
+</html>
